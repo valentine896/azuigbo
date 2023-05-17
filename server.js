@@ -26,13 +26,11 @@ app.post('/summarize', async (req, res) => {
 
   try {
     const gpt3Response = await axios.post(
-      'https://api.openai.com/v1/engines/text-davinci-002/completions',
+      'https://api.openai.com/v1/engines/davinci-codex/completions',
       {
-        prompt: `Give a concise 5-7 sentence summary of the following post:\n${text}`,
+        prompt: `${text}\n\nCan you summarize the above post in a few sentences?`,
         max_tokens: maxTokens,
-        n: 1,
-        stop: null,
-        temperature: 0.,
+        temperature: 0.3,
       },
       {
         headers: {
@@ -43,7 +41,7 @@ app.post('/summarize', async (req, res) => {
     );
 
     if (gpt3Response.data.choices && gpt3Response.data.choices.length > 0) {
-      const summary = gpt3Response.data.choices[0].text;
+      const summary = gpt3Response.data.choices[0].text.trim();
       console.log('GPT-3 API response:', gpt3Response.data);
       console.log('Generated summary:', summary);
       res.json({ summary });
